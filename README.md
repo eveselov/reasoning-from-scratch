@@ -1,4 +1,4 @@
-# Build A Reasoning Model (From Scratch)
+# Build A Reasoning Model (From Scratch) - local fork
 
 This repository contains the code for developing an LLM reasoning model and is the official code repository for the book [*Build a Reasoning Model (From Scratch)*](https://mng.bz/lZ5B).
 
