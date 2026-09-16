@@ -90,6 +90,30 @@ These don't exist in the upstream book repo — create them as needed:
   there as "explain / prep for later / run a tiny smoke-test," not "run the
   real thing," until I say I'm on the GPU machine.
 
+## Working across chat threads
+
+- New thread per work session/topic (a chapter walkthrough, presentation
+  prep, review drafting) rather than one endless thread — a new thread does
+  *not* automatically carry over a prior thread's conversation history.
+- What *does* carry over automatically: this file, in full, every session.
+  Claude's own separate persistent-memory notes (durable facts/preferences
+  it has chosen to save about this project) also carry over automatically.
+- What does *not* carry over automatically: `my-notes/`, `presentation/`,
+  `review/notes.md`. They persist in git, but Claude only reads them when
+  asked or when obviously relevant — so when starting a new thread on
+  chapter N, say so (or point at `my-notes/chNN.md`) to load the right file.
+- End-of-session habit: update the Progress table and Open items below
+  before closing a thread, so the next thread — even a brand-new one —
+  starts oriented without re-explaining.
+
+## How Claude should update this file
+
+When something changes that belongs here (a chapter finished, a new open
+item, a new convention we agree on) — propose the edit and show me the
+diff, then wait for my go-ahead before applying it. Don't edit this file
+silently, and don't wait for me to explicitly say "update CLAUDE.md" either
+— noticing it's needed and proposing it is the expected behavior.
+
 ## Progress (update this as I go)
 
 Status values: `not started` / `reading` / `code reviewed` / `done`.
