@@ -50,3 +50,25 @@ No code in this chapter — notes are purely about the prose/concepts.
   around the fixed-depth transformer architecture that isn't obvious from
   the architecture alone.
 
+**Metaphor ideas for review**
+
+Pretraining feels philosophically closer to evolution than to individual
+learning: both are the costly, slow process that has to build a general
+capacity to learn and reason *before* anything useful can happen — a
+randomly initialized transformer, like a brain with no evolutionary
+wiring, can't act or learn at all. Post-training/fine-tuning is the
+cheap, fast step on top — closer to an individual's education and
+life experience, layering specific facts and specialized skills onto
+that general capacity.
+
+Note - NOT FOR THE FINAL REVIEW: Current pretraining doesn't really separate "general reasoning/learning
+ability" from "specific facts" the way evolution arguably does with
+individuals — an LLM's pretraining bakes huge amounts of concrete
+knowledge into the same weights that presumably also encode whatever
+counts as its reasoning ability. In my personal forward-looking opinion
+I expect that future pretraining approaches will move
+toward instilling general reasoning/learning capacity while pushing
+more of the specific-fact burden onto external, updatable sources
+(retrieval, tools) — a direction current work like retrieval-augmented
+generation and model/knowledge editing is already probing, even though
+no one has fully cracked the separation yet.
