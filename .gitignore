@@ -172,7 +172,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.vscode
+.vscode/*
+!.vscode/settings.json
 .env
 .venv
 env/
