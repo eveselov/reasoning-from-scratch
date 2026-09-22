@@ -79,11 +79,17 @@ reasoning = { workspace = true }
 reasoning-from-scratch = { workspace = true }
 torch = [
     { index = "pytorch-cu130", marker = "sys_platform == 'linux' and platform_machine == 'aarch64'" },
+    { index = "pytorch-cu128", marker = "sys_platform == 'win32'" },  # local: CUDA build on Windows GPU machine
 ]
 
 [[tool.uv.index]]
 name = "pytorch-cu130"
 url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
 [tool.uv.workspace]

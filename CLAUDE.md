@@ -26,14 +26,23 @@ project of my own — the book's code is the reference material I'm studying.
 
 ## Hardware / machine situation
 
-- **Now**: Surface Studio (this machine). No serious GPU — fine for
+- **Surface Studio**: No serious GPU — fine for
   Chapters 1–4 (inference, evaluation, inference-time scaling) which the
   book says run reasonably on CPU.
-- **Later**: I'll switch to a 4-GPU machine once a chapter actually needs
-  it — that's realistically Ch. 5 onward (self-refinement) and definitely
-  Ch. 6–8 (RL/GRPO training, distillation), per the book's own hardware
-  guidance in the README.
-- When I switch, I'll `git clone` this fork (my origin) to the new machine
+- **GPU machine (ASUS, Windows 11, headless via RDP/SSH)**: 4× Quadro RTX
+  8000 (48 GB, Turing sm_75), NVLink pairs 0↔1 and 2↔3; GPUs 0–2 in TCC
+  mode, GPU 3 in WDDM mode (renders the RDP desktop). Xeon W-2195,
+  256 GB RAM. Needed realistically from Ch. 5 onward (self-refinement) and
+  definitely Ch. 6–8 (RL/GRPO training, distillation), per the book's own
+  hardware guidance in the README.
+  - PyTorch: `pyproject.toml` has a local Windows rule that pulls the
+    cu128 PyTorch build (upstream's default was CPU-only). Keep it when
+    merging upstream.
+  - Turing has no native bf16 support, so prefer fp16/fp32. Windows has no
+    NCCL, so multi-GPU falls back to gloo; consider WSL2 if a later
+    chapter needs fast multi-GPU training.
+  - GPU choice: default `cuda:0`; for 2 GPUs use `0,1` (NVLink pair).
+- When I switch machines, I'll `git clone` this fork (my origin) to the new machine
   — including my notes, presentation material, and review draft below, since
   those live in this repo, not just on this laptop. **Don't assume anything
   I want kept lives outside git** — if it matters, it should be a tracked
@@ -136,5 +145,8 @@ Status values: `not started` / `reading` / `code reviewed` / `done`.
 
 ## Open items / reminders to self
 
-- (nothing yet — add running to-dos here, e.g. "ask Claude to explain GRPO
-  advantage estimation once I hit ch07")
+- ASUS: disable sleep before long runs — currently sleeps after 60 min on
+  AC. Fix (admin): `powercfg /change standby-timeout-ac 0`; optionally
+  switch the power plan to High performance.
+- ASUS: install/enable OpenSSH Server for Remote-SSH from the Surface —
+  `sshd` is not installed yet. Steps are in [BUILD.md](BUILD.md) §2.
