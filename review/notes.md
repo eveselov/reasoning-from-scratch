@@ -72,3 +72,14 @@ more of the specific-fact burden onto external, updatable sources
 (retrieval, tools) — a direction current work like retrieval-augmented
 generation and model/knowledge editing is already probing, even though
 no one has fully cracked the separation yet.
+
+# Chapter 2. Preparing Input Text for LLM
+
+Sebastian pleasantly surprizes me again and again. I thought I have
+some general understanding of how models, agents, chats work and
+expected to see more details of that in Raschka's book. Surprizingly,
+I found a competely new (for me) discourse. Even though all the concepts
+(rokenizers, models, pretrainin, fine-tuning) have already been familiar
+and expected, the very style of presentation was fresh and inspiring
+to lean new twists and perspective in the area.
+
