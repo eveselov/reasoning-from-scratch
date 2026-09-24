@@ -41,6 +41,9 @@ project of my own — the book's code is the reference material I'm studying.
   - Turing has no native bf16 support, so prefer fp16/fp32. Windows has no
     NCCL, so multi-GPU falls back to gloo; consider WSL2 if a later
     chapter needs fast multi-GPU training.
+  - `torch.compile` / `--compile` is a no-op on this machine: the compiler
+    skips bf16 on Turing, and Triton isn't installed on Windows. Book
+    speedups from compiling won't reproduce here; that's expected.
   - GPU choice: default `cuda:0`; for 2 GPUs use `0,1` (NVLink pair).
 - When I switch machines, I'll `git clone` this fork (my origin) to the new machine
   — including my notes, presentation material, and review draft below, since
@@ -129,9 +132,9 @@ Status values: `not started` / `reading` / `code reviewed` / `done`.
 
 | Chapter | Topic                                        | Status      | Notes |
 |---------|-----------------------------------------------|-------------|-------|
-| 1       | Understanding Reasoning Models (no code)      | not started |       |
-| 2       | Generating Text with a Pre-trained LLM        | not started |       |
-| 3       | Evaluating Reasoning Models                   | not started |       |
+| 1       | Understanding Reasoning Models (no code)      | done        |       |
+| 2       | Generating Text with a Pre-trained LLM        | done        |       |
+| 3       | Evaluating Reasoning Models                   | reading     |       |
 | 4       | Improving Reasoning with Inference-Time Scaling | not started |     |
 | 5       | Inference-Time Scaling via Self-Refinement    | not started |       |
 | 6       | Training Reasoning Models with RL             | not started |       |
