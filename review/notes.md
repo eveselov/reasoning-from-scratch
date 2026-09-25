@@ -185,4 +185,28 @@ correct, since it reads the GPU's global counter, not that tensor. One-line fix:
 For the review: a good example of how small the rough edges are. Even the one
 glitch I hit is cosmetic, and the code's own sanity check is what surfaced it.
 
+# Chapter 03. Evaluating Reasoning Models
+
+## Raschka's Presentaion Style
+
+As in his previous book Sebastian uses very structured way of narration.
+After presenting a block diaram visual roadmap in the beginning he reuses it
+on every section and subsection with comments and highlights illustrating
+the current position of the reader in the overall narration - very easy
+to stay in context.
+
+## Paper book vs Jupyter Notebook
+
+The book material is in fact duplicated between paper book and executable notebooks.
+I found it very convenient. I start on a sofa reading a chapter, then open
+the notebook and go through the same materian in a slow pace, carefully reviewing
+and understanding every cell. Sometimes I add my own cells for micro experiments.
+This is a real "from scratch" style.
+
+## Evaluator Logic - Straightforward
+
+Evaluator logic is surprizingly straightforward. Not being familiar with evaluation patterns
+I expected some magic - especially for structured specialized texts like mathematical expressions.
+Chapter 03 implements evaluator in a narural simple way. Pleasant surprize not finding
+any surprizes. Latex and SymPy syntax normalization is the only "magic".
 
