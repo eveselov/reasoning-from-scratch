@@ -111,6 +111,9 @@ You can read the book. You can read
 the notebooks. You can read the auxiliary code. You can run any of it. You can use full setup
 from the cloned repository, or partial pip- or uv- installed packages. Raschka has thought 
 of everything!
+In fact the book behaves like a well-polished app that can be used by different
+users in different scenarios and configurations - small CPU only laptop or a server with powerful GPUs, 
+in base or reasoning or instruc mode - this "app" is well debugged for all permutations.
 Knowing from my own developer's experience how difficult is to not just to come to an idea
 but to make it really work and work reliably and work for different users - I see that Raschka's
 task would be impossible to implement. But here it is. Working! 
@@ -197,16 +200,22 @@ to stay in context.
 
 ## Paper book vs Jupyter Notebook
 
-The book material is in fact duplicated between paper book and executable notebooks.
+The book material seems duplicated between the paper book and the notebooks.
 I found it very convenient. I start on a sofa reading a chapter, then open
-the notebook and go through the same materian in a slow pace, carefully reviewing
+the notebook and go through the same material in a slow pace, carefully reviewing
 and understanding every cell. Sometimes I add my own cells for micro experiments.
 This is a real "from scratch" style.
 
 ## Evaluator Logic - Straightforward
 
-Evaluator logic is surprizingly straightforward. Not being familiar with evaluation patterns
+Evaluator logic is quite straightforward. Not being familiar with evaluation patterns
 I expected some magic - especially for structured specialized texts like mathematical expressions.
 Chapter 03 implements evaluator in a narural simple way. Pleasant surprize not finding
 any surprizes. Latex and SymPy syntax normalization is the only "magic".
+
+## Learning
+
+As a very useful side effect of working with the book was learning tools and
+techniques I never knew about before: math data sets, math rendering, LaTeX,
+(expecting more in the following chapters).
 
