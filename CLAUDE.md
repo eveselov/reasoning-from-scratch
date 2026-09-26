@@ -134,8 +134,8 @@ Status values: `not started` / `reading` / `code reviewed` / `done`.
 |---------|-----------------------------------------------|-------------|-------|
 | 1       | Understanding Reasoning Models (no code)      | done        |       |
 | 2       | Generating Text with a Pre-trained LLM        | done        |       |
-| 3       | Evaluating Reasoning Models                   | reading     |       |
-| 4       | Improving Reasoning with Inference-Time Scaling | not started |     |
+| 3       | Evaluating Reasoning Models                   | done        |       |
+| 4       | Improving Reasoning with Inference-Time Scaling | reading     |     |
 | 5       | Inference-Time Scaling via Self-Refinement    | not started |       |
 | 6       | Training Reasoning Models with RL             | not started |       |
 | 7       | Improving GRPO for RL                         | not started |       |
