@@ -267,16 +267,160 @@ experiments about that. For instance, what if the temperature
 in next token generation is changed during autogeneation, assuming that
 in the beginning the higher temperaturewill benefit breadth of ideas,
 while the lower temperature at the "conclusion" phase will make the final
-decision more solid - or similar tricks. 
+decision more solid - or similar tricks.
 
-It's especially amazing that technically the text of tis chapter looks
-excessively detailed  lots of code that by itself is obvious or even trivial
+It's especially amazing that technically the text of this chapter looks
+excessively detailed, lots of code that by itself is obvious or even trivial
 (unlike the code in Raschka previous book about transformer internals).
-At first I thogh that the whole chapter could be condences to a couple 
+At first I thoght that the whole chapter could be condenced to a couple 
 of sentences (no spoilers, though), with a reference to an appendix with
 code technicalities. But - thanks to Raschka's "from scratch" style -
 namely these details and slow pace allowed me to grasp something very
-important which totally escaped my understanding so far. Advice to other
-readers: don't skip this chapter because the code looks trivial; do all the suggested exercises.
+important which totally escaped my understanding so far - a power of the last layer
+of transformer autogenerative architecture - converting logits to tokens
+with temperature variations. Advice to other readers: don't skip this chapter 
+because the code looks trivial; do all the suggested exercises. Quoting
+Raschka: "these low-level sampling conrols may seem overly technical,
+but they are what will let us generate diverse candidate answers for
+self-consistency sampling".
+
+Temperature sensitivity. It was interesting to play with
+different values of temperature: 1.1 produced a valid result,
+while 1.2 generated complete garbage. It impressed me as to how
+the people using this method for model tuning choose proper
+values?
+
+A note on self-consistency sampling. This method looked a bit too
+artificial. Applying guessing-and-voting to a task of such strictness as math
+seems illogical. On the other hand for more speculative tasks,
+such as planning, researching, that do not have a single simple
+answer votig based on forml evaluation seems irrelevant.
+I understand that this examples is just a demonstration of one of
+techniques, and the prove that chain-of-though method works
+but still it did not look convincing to me - woodoo...
+
+### (Attempt 2) Re-frasing the impression
+
+My impression about this chapter is close to shoking. Not because I saw
+a super-useful and super powerful algorithms or data structureas
+(like I did in his first book). Actually the chapter contains a set of
+quite boring algorithms for choosing the next token from the logits
+predicted by a single model run. The logic is most trivial: select
+most or one of most likely one. Both thetechnical idea and the agorithms
+thet implement them are most straightforward. Maybe exactly because of that
+in my first pass of learning it I mnissed the entire depth and power
+of this step. I was too much concentrated in all 12 or 120 levels of
+the transformer with the beauty of self attention glued by fast forward
+propagation, normalization, residual connections... So such simple step
+as choosing a position with the highest logic score did not catch my attention
+at the time.
+
+Reading this chapter and playing with the mechanisms of inference-time scaling
+I realized that this "simple" step taken in the overall context of
+autogeneration is the place where the "reasoning" happens. I (completely
+incorreclty) though that all those 120+ layers of transformer is where
+the multi-step logic and chained reasoning must have happened.
+Now I realized that that monstrouse 120+ layers working on million+ lenth
+context window is nothing but an act of reasoning. It is based on
+pretrained patters that allow selecting the next token from the given
+context, and it does make all the miracle of thinking, but this miracle
+is just a single atom of thinking. The result of such atomic thinking effort -
+the next token - drives the reasoning process forward into the overall
+reasoning direction, feeds the next atomic steps with enriched information.
+This enrichment drives the model into different hypotheses, prepares
+following steps, thus it is an essense of thinking, but the *process* of thinking
+is in autogeneration sequence. Because of that the method of choosing the next
+token is so sensitive: the higher temperature makes the model to explore
+the breadths of the problem, the length and duration of the autogeneration
+provides depth of reasoning by allowing to take into account progressively
+more aspects of the problem. So strange, that I completely missed that
+in the first cycle of learning transforers.
+
+The chapter 04 that describes how "chain of thought" works could be squeezed into
+a couple of sentences. But it was Raschka's "from scratch" style that
+made me to discover the importance of this last-step of the transformer mechanism.
+
+The second part of the chapter - self-consistency based on "voting" on generated
+variants - on the contrary did not produce such a good impression.
+Maybe I am missing something again, but this "try-and-choose" method did not appear
+to me neither fundamental, nor generally acceptable. The only possible usefulness
+of it for me was to treat it as one of many model "coocking" techniques
+that (as I assumed) happen in LLM laboratories before they deliver to the consumer
+a tasty dish from a raw intellectual meat.
 
 
+### (Attempt 3) The discovery: atoms of thinking vs. the train of reasoning
+
+I have to admit that this chapter shocked me - and not in the way I expected.
+There is no dazzling algorithm in it, nothing like the self-attention
+machinery that I admired so much in Raschka's first book. On the surface
+the chapter is almost boring: ask the model to explain its steps, pick
+the next token a bit less greedily, turn a temperature knob. The code is
+so plain that I caught myself thinking "this could have been two sentences".
+
+And then, somewhere in the middle of playing with this plain code,
+the ground moved under my feet.
+
+For years my picture of a transformer was a picture of *one forward pass*.
+That is where all the beauty lives: attention heads looking at the whole
+context at once, layer upon layer of trained patterns, everything I spent
+the entire first book learning to love. Naturally I assumed that this is
+also where reasoning lives - that the chain of thought is climbing up
+through the layers. And since the number of layers is fixed, I quietly
+believed that the depth of reasoning must be fixed too. The little loop
+at the end, which takes the produced token and appends it to the input,
+looked to me like plumbing. A printer attached to the brain.
+
+I had it upside down. Or rather, I was looking along the wrong axis.
+
+A forward pass, with all its magnificence, is one *atom of thinking*.
+It is a single deep dive: the model plunges into the whole context, grasps
+it, and comes back to the surface with exactly one thing - the next token.
+One flash of insight, and no more. It cannot go back and think again;
+its depth is whatever the layers allow.
+
+Reasoning is something else. Reasoning is the *train* of such atoms.
+The model writes its small insight down, and in the next dive it reads
+its own words together with everything else, and dives again from a
+slightly higher place. The dive is insight; the writing down and reading
+back is what organizes insights into a thought that goes somewhere.
+It is exactly like a person with a pencil: I can multiply two small numbers
+in my head, but for a long calculation I need paper. The paper is not
+intelligent. Yet without it there is no long calculation at all.
+The "printer" turned out to be the pencil - and the pencil turned out
+to be half of the mind.
+
+The two mechanisms are orthogonal, almost literally: one runs vertically,
+through the layers, and is bounded; the other runs horizontally, through
+the generated text, and is open-ended. The written token is the only road
+from the top of the model back to its bottom. This is why "let the model
+write more before it answers" is not a prompting trick but a change in
+the amount of thinking. In Raschka's own measurements the very same model,
+with not a single weight changed, goes from about 15% to about 40% on the
+math benchmark just by being asked to write out its steps. Same atoms.
+A longer train.
+
+It also explains what I saw when I raised the temperature a little too
+high: the model wrote one careless line in the middle of a correct
+solution - and then faithfully, confidently, built the rest of the answer
+on top of it. One bad atom, and the whole train went down the wrong track.
+What is written is taken as a fact. I have rarely seen a more human
+mistake made by a machine.
+
+The embarrassing part is that none of this is new. It follows directly
+from how text generation works, which I "knew". Raschka even says it
+in plain words in chapter 1: reasoning is the model generating intermediate
+steps before its final answer. I read that sentence, nodded, and understood
+nothing. When I later tried the idea on friends who know transformers,
+I saw the same thing in them: everybody knows the loop, almost nobody
+has *felt* what the loop is for. It is trivial - after you get it.
+
+And this is where I want to give Raschka the credit he deserves.
+He does not lecture this idea. He tells it once, quietly, in chapter 1.
+Then in chapter 2 he makes you build the generation loop with your own
+hands, when it still looks like plumbing. And in chapter 4 he changes
+nothing in the model at all - only how it is allowed to write - and lets
+you watch the numbers move. The slow pace and the "obvious" code that
+I was ready to skip are exactly what made the discovery mine and not
+his. A simple truth had to be told one more time, and it had to be told
+this way, from scratch, for me to finally hear it.
