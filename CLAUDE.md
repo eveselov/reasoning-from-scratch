@@ -45,6 +45,9 @@ project of my own — the book's code is the reference material I'm studying.
     skips bf16 on Turing, and Triton isn't installed on Windows. Book
     speedups from compiling won't reproduce here; that's expected.
   - GPU choice: default `cuda:0`; for 2 GPUs use `0,1` (NVLink pair).
+  - Network: wired Ethernet (Intel X550, 1 Gbps). Don't go back to the
+    Realtek 8812BU USB Wi-Fi dongle — it dropped all traffic for 7–9 s at
+    a time, which froze the RDP session for ~30 s (diagnosed 2026-10-11).
 - When I switch machines, I'll `git clone` this fork (my origin) to the new machine
   — including my notes, presentation material, and review draft below, since
   those live in this repo, not just on this laptop. **Don't assume anything
