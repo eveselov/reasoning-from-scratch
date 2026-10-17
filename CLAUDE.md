@@ -29,9 +29,11 @@ project of my own — the book's code is the reference material I'm studying.
 - **Surface Studio**: No serious GPU — fine for
   Chapters 1–4 (inference, evaluation, inference-time scaling) which the
   book says run reasonably on CPU.
-- **GPU machine (ASUS, Windows 11, headless via RDP/SSH)**: 4× Quadro RTX
-  8000 (48 GB, Turing sm_75), NVLink pairs 0↔1 and 2↔3; GPUs 0–2 in TCC
-  mode, GPU 3 in WDDM mode (renders the RDP desktop). Xeon W-2195,
+- **GPU machine (ASUS, Windows 11, headless via RDP/SSH)**: currently 1×
+  Quadro RTX 8000 (48 GB, Turing sm_75, WDDM mode). The other 3 cards were
+  removed on 2026-10-17: 4 cards at full load (~1.4 kW at the wall) is at
+  the limit of a 15 A home circuit. 2 cards (~850 W) are fine on it — put
+  back GPU 0's NVLink partner first if a model needs >48 GB. Xeon W-2195,
   256 GB RAM. Needed realistically from Ch. 5 onward (self-refinement) and
   definitely Ch. 6–8 (RL/GRPO training, distillation), per the book's own
   hardware guidance in the README.
@@ -44,7 +46,14 @@ project of my own — the book's code is the reference material I'm studying.
   - `torch.compile` / `--compile` is a no-op on this machine: the compiler
     skips bf16 on Turing, and Triton isn't installed on Windows. Book
     speedups from compiling won't reproduce here; that's expected.
-  - GPU choice: default `cuda:0`; for 2 GPUs use `0,1` (NVLink pair).
+  - GPU choice: `cuda:0` (only GPU). When the cards return: for 2 GPUs
+    use an NVLink pair (`0,1` or `2,3`).
+  - Switching back to 4 GPUs later: only after a dedicated circuit is
+    added, or with each card capped via `nvidia-smi -pl 150` (admin; resets
+    on reboot, so run it from a startup scheduled task). Reinstall the
+    NVLink bridges for pairs 0↔1 and 2↔3. The old layout had GPUs 0–2 in
+    TCC mode and GPU 3 in WDDM (rendering the RDP desktop); restore it with
+    `nvidia-smi -i N -dm 1` (TCC) / `-dm 0` (WDDM), admin + reboot.
   - Network: wired Ethernet (Intel X550, 1 Gbps). Don't go back to the
     Realtek 8812BU USB Wi-Fi dongle — it dropped all traffic for 7–9 s at
     a time, which froze the RDP session for ~30 s (diagnosed 2026-10-11).
