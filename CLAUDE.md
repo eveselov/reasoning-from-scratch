@@ -29,11 +29,12 @@ project of my own — the book's code is the reference material I'm studying.
 - **Surface Studio**: No serious GPU — fine for
   Chapters 1–4 (inference, evaluation, inference-time scaling) which the
   book says run reasonably on CPU.
-- **GPU machine (ASUS, Windows 11, headless via RDP/SSH)**: currently 1×
-  Quadro RTX 8000 (48 GB, Turing sm_75, WDDM mode). The other 3 cards were
-  removed on 2026-10-17: 4 cards at full load (~1.4 kW at the wall) is at
-  the limit of a 15 A home circuit. 2 cards (~850 W) are fine on it — put
-  back GPU 0's NVLink partner first if a model needs >48 GB. Xeon W-2195,
+- **GPU machine (ASUS, Windows 11, headless via RDP/SSH)**: 4× Quadro RTX
+  8000 (48 GB, Turing sm_75), reinstalled 2026-10-18. On a normal 15 A home
+  circuit, so all 4 are capped at 150 W by a startup task ("GPU power cap
+  150W", `nvidia-smi -pl 150`): ~600 W for the GPUs, ~800 W at the wall;
+  uncapped all 4 would be ~1.4 kW. Capped, each card keeps ~60% of its speed;
+  no thermal throttling. Xeon W-2195,
   256 GB RAM. Needed realistically from Ch. 5 onward (self-refinement) and
   definitely Ch. 6–8 (RL/GRPO training, distillation), per the book's own
   hardware guidance in the README.
@@ -46,14 +47,15 @@ project of my own — the book's code is the reference material I'm studying.
   - `torch.compile` / `--compile` is a no-op on this machine: the compiler
     skips bf16 on Turing, and Triton isn't installed on Windows. Book
     speedups from compiling won't reproduce here; that's expected.
-  - GPU choice: `cuda:0` (only GPU). When the cards return: for 2 GPUs
-    use an NVLink pair (`0,1` or `2,3`).
-  - Switching back to 4 GPUs later: only after a dedicated circuit is
-    added, or with each card capped via `nvidia-smi -pl 150` (admin; resets
-    on reboot, so run it from a startup scheduled task). Reinstall the
-    NVLink bridges for pairs 0↔1 and 2↔3. The old layout had GPUs 0–2 in
-    TCC mode and GPU 3 in WDDM (rendering the RDP desktop); restore it with
-    `nvidia-smi -i N -dm 1` (TCC) / `-dm 0` (WDDM), admin + reboot.
+  - Layout (nvidia-smi / PCI order; set `CUDA_DEVICE_ORDER=PCI_BUS_ID` so
+    PyTorch numbers them the same): GPUs 0–2 TCC, GPU 3 (bus 0x68) WDDM,
+    rendering the RDP desktop. The driver forces one card to stay WDDM —
+    asking for all 4 TCC flips GPU 3 back after reboot.
+  - NVLink: both bridges active, but only 0↔1 is usable (43.7 GiB/s);
+    2↔3 peer copies are blocked by GPU 3's WDDM mode (9.4 GiB/s via PCIe).
+    GPU choice: default `cuda:0`; for 2 GPUs use `0,1`.
+  - If a GPU shows Code 43 after boot (happened once, 2026-10-18), admin:
+    `pnputil /restart-device "<instance id from Device Manager>"`.
   - Network: wired Ethernet (Intel X550, 1 Gbps). Don't go back to the
     Realtek 8812BU USB Wi-Fi dongle — it dropped all traffic for 7–9 s at
     a time, which froze the RDP session for ~30 s (diagnosed 2026-10-11).
@@ -160,8 +162,12 @@ Status values: `not started` / `reading` / `code reviewed` / `done`.
 
 ## Open items / reminders to self
 
-- ASUS: disable sleep before long runs — currently sleeps after 60 min on
-  AC. Fix (admin): `powercfg /change standby-timeout-ac 0`; optionally
-  switch the power plan to High performance.
-- ASUS: install/enable OpenSSH Server for Remote-SSH from the Surface —
-  `sshd` is not installed yet. Steps are in [BUILD.md](BUILD.md) §2.
+- ASUS sleep: default is manual sleep (Start → Sleep, wake with front
+  button) with a 4 h auto-sleep as a safety net. Runs don't count as
+  activity — before a long job, admin: `powercfg /change
+  standby-timeout-ac 0`; restore after with `... 240`.
+- ASUS SSH: `sshd` installed 2026-10-18 (auto-start, survives sleep and
+  reboot); `ssh user@ASUS-GPU` from the Surface works with a password;
+  shell is cmd.exe (DefaultShell left unset — PowerShell 7 isn't
+  installed). Still to do: key login ([BUILD.md](BUILD.md) §3, admin
+  account → `administrators_authorized_keys`), VS Code Remote-SSH (§5).
