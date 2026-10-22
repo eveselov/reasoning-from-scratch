@@ -347,3 +347,17 @@ in the network?
 
 Vary the temperature *during* generation: higher at the start for breadth of
 ideas, lower in the "conclusion" phase to make the final answer solid.
+
+# Chapter 05. Inference-tim scaling via self-refinement
+
+I am impressed gain with another surprize: I really did not expect
+how much depth can be opened in enhancing the modes=ls without touching their weights.
+This exploration reveals a lot about the mechanisms of rationality
+both in technical and on philosophical levels.
+
+This time Raschka opened another "obvious" aspect - the model-generated
+logits could be not only picked by probabilities, but analyzed to
+evaluate aspects of model's self-feeling. This might work like a
+self-refelection mechanism, and not only for observation but for
+steering the model thinking into specific directions. It is yet another
+"discovery" about model reasoning mechanisms.

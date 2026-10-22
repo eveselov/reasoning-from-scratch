@@ -1,4 +1,4 @@
-The grid script is ready at [presentation/temperature_seed_grid.py](presentation/temperature_seed_grid.py). I ran a tiny version on the RTX 8000 and it works end to end. I haven't started the full run.
+# presentation/temperature_seed_grid Script
 
 **How it works:**
 - It reuses the book's own functions (`load_model_and_tokenizer`, `render_prompt`, `generate_text_top_p_stream_cache`, `extract_final_candidate`, `grade_answer`), so it's the Ch. 4 code wrapped in a loop.
