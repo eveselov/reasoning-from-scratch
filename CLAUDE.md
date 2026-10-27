@@ -32,9 +32,11 @@ project of my own — the book's code is the reference material I'm studying.
 - **GPU machine (ASUS, Windows 11, headless via RDP/SSH)**: 4× Quadro RTX
   8000 (48 GB, Turing sm_75), reinstalled 2026-10-18. On a normal 15 A home
   circuit, so all 4 are capped at 150 W by a startup task ("GPU power cap
-  150W", `nvidia-smi -pl 150`): ~600 W for the GPUs, ~800 W at the wall;
-  uncapped all 4 would be ~1.4 kW. Capped, each card keeps ~60% of its speed;
-  no thermal throttling. Xeon W-2195,
+  150W", `nvidia-smi -pl 150`). Metered 2026-10-23 (socket also feeds the
+  Surface + printer): idle 200 W; each loaded GPU adds ~165 W at the wall;
+  all 4 GPUs 869 W; all 4 + CPU 100% 940 W (~65% of the 1,440 W continuous
+  limit). Uncapped would be ~1.44 kW, at the limit. Capped, each card keeps
+  ~60% of its speed; no thermal throttling. Xeon W-2195,
   256 GB RAM. Needed realistically from Ch. 5 onward (self-refinement) and
   definitely Ch. 6–8 (RL/GRPO training, distillation), per the book's own
   hardware guidance in the README.

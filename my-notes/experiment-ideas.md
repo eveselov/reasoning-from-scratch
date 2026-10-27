@@ -154,6 +154,55 @@ RTX 8000; no multi-GPU needed. Use fp16/fp32, not bf16 (Turing).
 - Paivio — dual coding theory (human parallel)
 
 ---
+
+## 4. Re-running the book's experiments with larger Qwen3 models (ASUS)
+
+Idea (2026-10-27): run Raschka's experiments both as published (0.6B)
+and with the largest model the ASUS (4× RTX 8000, 48 GB each) can handle,
+selected by a `--model_size` parameter. **No code written yet.**
+
+### What already exists
+- `reasoning_from_scratch/appendix_c.py`: configs `QWEN3_CONFIG_1_7B`,
+  `_4B`, `_8B`, `_14B`, `_32B`; `Qwen3Model` works at any size unchanged.
+- Appendix D (`chD/chD_main.ipynb`): downloads official HF safetensors
+  for larger Qwen3 and loads them into the book's model code. Read it
+  first.
+- The size is hardcoded in one main place: `load_model_and_tokenizer` in
+  `reasoning_from_scratch/ch03.py` (always 0.6B). The ch03–05 scripts all
+  go through it and already use argparse (`evaluate_math500.py`,
+  `self_consistency_math500.py`, `self_refinement_math500.py`,
+  `best_of_n_math500.py`).
+
+### Realistic maximum per chapter
+| Chapters | Workload | Max size | Why |
+|---|---|---|---|
+| 2–5 | Inference / evaluation | 14B on one card; 32B across GPUs 0+1 | 14B ≈ 28 GB fp16 weights + KV cache. 32B ≈ 64 GB → split layers `cuda:0`/`cuda:1` over the NVLink pair (~20 lines; book code has no model parallelism) |
+| 6–7 | GRPO training | 1.7B comfortable; 4B with effort | AdamW full fine-tune ≈ 16 bytes/param before activations/rollouts; 4B needs grad checkpointing, 8-bit Adam, or LoRA. Multi-GPU on Windows = gloo (slow) |
+| 8 | Distillation | as training | the student is trained |
+
+### Caveats
+- Precision: configs use bf16, which Turing only emulates (slow). fp16 is
+  fast, but larger Qwen models can overflow (NaN/inf) — validate before
+  trusting accuracy numbers. fp32 14B = 56 GB, doesn't fit one card.
+- Run time: 14B ≈ 23× the per-token compute of 0.6B, plus the 150 W cap
+  and long thinking chains → hours for full MATH-500. Start with
+  `--dataset_size` ~50.
+- Expected result: larger Qwen3 is already much stronger on MATH-500, so
+  self-consistency / self-refinement may help far less than at 0.6B.
+  That itself is a good finding for the talk.
+
+### Implementation plan (for later)
+1. New module (e.g. `reasoning_from_scratch/model_sizes.py`): size →
+   config, safetensors download as in Appendix D, dtype handling,
+   optional 2-GPU layer split.
+2. Small changes to `load_model_and_tokenizer` and the ch03–05 scripts:
+   `--model_size` / `--dtype` options with book defaults (0.6B), so
+   `git merge upstream/main` stays conflict-free.
+3. Test: 1.7B on the Surface → 14B fp16 on the ASUS on a few problems →
+   32B split across GPUs 0+1.
+4. Training chapters (6–8): only after reading Ch06.
+
+---
 ---
 ---
 
